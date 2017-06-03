@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Pong-Survival Game</title>
+
+    <style type="text/css">
+        canvas {
+            background: url("1.png");
+            border: 1px solid black;
+        }
+    </style>
+
+    <!-- The Canvas background image is created by me using RPG Maker VX ACE -->
+
+</head>
+
+<body>
+<h1>Pong-Survival Game</h1>
+    <canvas id="theCanvas" width="1024" height="768"></canvas>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("theCanvas");
+        var ctx = canvas.getContext("2d");
+        var x = Math.round(Math.random() * 600);
+        var y = 100;
+        var vx = 3;
+        var vy = -3;
+        var padx = 500;
+        var pady = canvas.height - 10;
+        var padlen = 80;
+        var padwidth = 10;
+        var bwidth = 12; // width of ball
+        var blength = 0; //length of ball
+        var rightPressed = false;
+        var leftPressed = false;
+        var score = 0;
+
+
+        document.addEventListener("keydown", keyDownHandler, false);
+        document.addEventListener("keyup", keyUpHandler, false);
+        // when key is pressed
+        function keyDownHandler(e) {
+            if (e.keyCode == 39) {
+                rightPressed = true;
+            } else if (e.keyCode == 37) {
+                leftPressed = true;
+            }
+        }
+        //when key is released
+        function keyUpHandler(e) {
+            if (e.keyCode == 39) {
+                rightPressed = false;
+            } else if (e.keyCode == 37) {
+                leftPressed = false;
+            }
+
+        }
+
+        // draws ball
+
+        function drawball() {
+            ctx.beginPath();
+            ctx.arc(x, y, bwidth, blength, 2 * Math.PI);
+            ctx.fillStyle = "Yellow";
+            ctx.strokeStyle = "black";
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        //draws paddle
+        function rectanglePaddle() {
+
+            ctx.beginPath();
+            ctx.fillStyle = "orange";
+            ctx.rect(padx, pady, padlen, padwidth);
+            ctx.fill();
+            ctx.stroke();
+            ctx.closePath();
+
+        }
+        //collision detection goes here
+        function collisiondetection() {
+            // reflects ball from left and right walls
+            if (x + vx > canvas.width - bwidth || x + vx < bwidth) {
+                //reflects the ball
+                vx = -vx;
+                //increases score by 1 every time ball touches the wall
+                score = score + 1;
+            }
+            //reflects ball from top wall with reduced speed
+            if (y + vy < bwidth) {
+
+                vy = -0.7 * vy;
+                //increases the score by 0.5
+                score = score + 0.5;
+
+            }
+            //reflects ball from paddle with double speed
+            else if (y + vy > canvas.height - (padwidth+bwidth)) {
+                if ((x+bwidth)>(padx+bwidth) && (x+bwidth)< (padx+padlen+bwidth)) {
+
+                    vy = -2 * vy;
+                    //increases the score by 3 every time it hits the paddle 
+                    score = score + 3;
+
+                }
+                //Ends the game,displays the score  and restarts the game 
+                else {
+                    alert("Game Over and your score is   : " + score);
+                    //used for restarting the game
+                    document.location.reload();
+                }
+            }
+
+        }
+
+        //User input for paddle
+        function paddlemotion() {
+            //for moving paddle to right side
+            if (rightPressed && padx < canvas.width - padlen) {
+                padx = padx + 9;
+            }
+            //for moving paddle to left side 
+            else if (leftPressed && padx > 0) {
+                padx = padx - 9;
+            }
+        }
+        //draws ball on canvas at this updated co-ordinates 
+        function updateState() {
+            x = x + vx;
+            y = y + vy;
+
+        }
+        //animates everything on the screen 
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            rectanglePaddle();
+            drawball();
+            updateState();
+            collisiondetection();
+            paddlemotion();
+            ctx.fillStyle = "rgb(250, 250, 250)";
+            ctx.font = "24px Helvetica";
+            ctx.textAlign = "left";
+            ctx.textBaseline = "top";
+            ctx.fillText("Pong Survival mode score : " + score, 32, 32);
+            requestAnimationFrame(draw);
+        }
+        //animates the screen
+        draw();
+    </script>
+	<p>RULES OF GAME:</p>
+	<p>This is a survival mode of the pong game.Here your goal is to get as much high score as you can without letting the ball touch bottom surface.</p>
+	<p>You will get 0.5 point when the ball touches left or right wall.0.5 point on top wall and 3 points on the paddle</p>
+	<p>The points are distributed fairly, which will affect on difficulty of game on every contact of the ball.</p>
+	<p>Enjoy! Can you beat my highscore of 100 points? :P</p>
+</body>
+
+</html>
