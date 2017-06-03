@@ -1,0 +1,2 @@
+# Single-Player-Pong-
+This is a survival mode of the pong game.Here your goal is to get as much high score as you can without letting the ball touch bottom surface.  You will get 0.5 point when the ball touches left or right wall.0.5 point on top wall and 3 points on the paddle  The points are distributed fairly, which will affect on difficulty of game on every contact of the ball.  Enjoy! Can you beat my highscore of 100 points? 
